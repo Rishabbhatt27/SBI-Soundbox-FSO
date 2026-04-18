@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SBI Instant Activation - FOS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0B1E33 0%, #1A3A5C 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 12px;
+        }
+
+        #app {
+            width: 390px;
+            max-width: 100%;
+            height: 844px;
+            max-height: 95vh;
+            background: #F5F7FB;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 20, 50, 0.5);
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .screen {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background: #F5F7FB;
+        }
+
+        .screen-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px;
+            scrollbar-width: none;
+        }
+
+        .screen-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* SBI Colors */
+        :root {
+            --sbi-primary: #003876;
+            --sbi-secondary: #00A3E0;
+            --sbi-accent: #FF6B00;
+            --sbi-light: #E8F0FE;
+            --sbi-success: #00875A;
+            --sbi-warning: #FFAB00;
+            --sbi-danger: #DE350B;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #003876 0%, #0052A3 100%);
+            padding: 48px 20px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #00A3E0;
+        }
+
+        .header-left, .header-right {
+            width: 40px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .back-btn, .logout-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover, .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* SBI Logo */
+        .sbi-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sbi-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sbi-logo-text {
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
+
+        /* Prompt Banner */
+        .prompt-banner {
+            background: linear-gradient(135deg, #E8F0FE 0%, #D4E4F7 100%);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #003876;
+        }
+
+        .prompt-banner p {
+            font-size: 13px;
+            color: #1A3A5C;
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #003876 0%, #0052A3 100%);
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 56, 118, 0.3);
+            margin-top: 16px;
+        }
+
+        .btn-primary:disabled {
+            background: #B0BEC5;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, #002D5E 0%, #004894 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0, 56, 118, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #003876;
+            border: 2px solid #003876;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: #E8F0FE;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            background: linear-gradient(180deg, #003876 0%, #002856 100%);
+        }
+
+        .login-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 0 24px;
+        }
+
+        .logo-section {
+            text-align: center;
+            padding-top: 60px;
+            padding-bottom: 30px;
+        }
+
+        .sbi-main-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .sbi-circle {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .sbi-circle svg {
+            width: 50px;
+            height: 50px;
+        }
+
+        .logo-section h1 {
+            color: white;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .logo-section p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .sbi-tagline {
+            color: #00A3E0;
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+            border-top: 4px solid #00A3E0;
+        }
+
+        .login-card h2 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #003876;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: #64748B;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1E293B;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            background: #F8FAFC;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #003876;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 56, 118, 0.1);
+        }
+
+        .password-input {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #64748B;
+            padding: 4px;
+        }
+
+        .error-message {
+            background: #FEF2F2;
+            color: #DC2626;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-bottom: 16px;
+            border-left: 4px solid #DC2626;
+        }
+
+        .demo-hint {
+            margin-top: 20px;
+            padding: 14px;
+            background: #F1F5F9;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .demo-hint p {
+            color: #003876;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* Dashboard */
+        .welcome-section {
+            margin-bottom: 20px;
+        }
+
+        .welcome-section h2 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #003876;
+        }
+
+        .welcome-section p {
+            color: #64748B;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .sbi-badge {
+            display: inline-block;
+            background: #00A3E0;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 18px;
+            padding: 18px 14px;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 56, 118, 0.08);
+            border: 1px solid #E2E8F0;
+        }
+
+        .action-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 56, 118, 0.12);
+            border-color: #003876;
+        }
+
+        .action-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+
+        .action-icon.blue {
+            background: linear-gradient(135deg, #003876 0%, #0052A3 100%);
+            color: white;
+        }
+
+        .action-icon.orange {
+            background: linear-gradient(135deg, #FF6B00 0%, #FF8F00 100%);
+            color: white;
+        }
+
+        .action-card h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 4px;
+        }
+
+        .action-card p {
+            font-size: 12px;
+            color: #64748B;
+        }
+
+        /* Ticket List */
+        .search-box {
+            background: white;
+            border-radius: 14px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #E2E8F0;
+        }
+
+        .search-box:focus-within {
+            border-color: #003876;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .ticket-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ticket-item {
+            background: white;
+            border-radius: 16px;
+            padding: 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0, 56, 118, 0.06);
+            border: 1px solid #E2E8F0;
+        }
+
+        .ticket-item:hover {
+            box-shadow: 0 6px 14px rgba(0, 56, 118, 0.1);
+            border-color: #003876;
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .ticket-id {
+            font-size: 14px;
+            font-weight: 600;
+            color: #003876;
+        }
+
+        .ticket-status {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-open {
+            background: #D1FAE5;
+            color: #00875A;
+        }
+
+        .status-progress {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .ticket-item h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 8px;
+        }
+
+        .ticket-mobile, .ticket-location {
+            font-size: 13px;
+            color: #64748B;
+            margin-bottom: 4px;
+        }
+
+        .resume-hint {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #E2E8F0;
+        }
+
+        .resume-hint span {
+            font-size: 13px;
+            color: #D97706;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94A3B8;
+        }
+
+        /* Ticket Details */
+        .detail-card {
+            background: white;
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0, 56, 118, 0.06);
+            border: 1px solid #E2E8F0;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #E2E8F0;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+
+        .detail-row .label {
+            font-size: 14px;
+            color: #64748B;
+        }
+
+        .detail-row .value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1E293B;
+        }
+
+        /* Scan Section */
+        .scan-section {
+            margin-bottom: 24px;
+        }
+
+        .scan-section label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1E293B;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .scan-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .scan-input-group input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            background: #F8FAFC;
+        }
+
+        .scan-input-group input:focus {
+            outline: none;
+            border-color: #003876;
+            background: white;
+        }
+
+        .scan-btn {
+            background: white;
+            border: 2px solid #003876;
+            color: #003876;
+            padding: 0 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .scan-btn:hover {
+            background: #003876;
+            color: white;
+        }
+
+        .scanned-badge {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 13px;
+            color: #00875A;
+            font-weight: 500;
+        }
+
+        /* OTP Card */
+        .otp-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 56, 118, 0.08);
+            border: 1px solid #E2E8F0;
+        }
+
+        .otp-icon {
+            margin-bottom: 20px;
+        }
+
+        .otp-sent-to {
+            font-size: 15px;
+            color: #64748B;
+            margin-bottom: 28px;
+        }
+
+        .otp-container {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .otp-input {
+            width: 46px;
+            height: 54px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #003876;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-color: #003876;
+            box-shadow: 0 0 0 3px rgba(0, 56, 118, 0.1);
+        }
+
+        .attempts-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #64748B;
+            margin-bottom: 20px;
+        }
+
+        .attempts-info .hint {
+            color: #D97706;
+        }
+
+        .error-text {
+            color: #DC2626;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        .resend-btn {
+            background: none;
+            border: none;
+            color: #003876;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 12px;
+            margin-top: 16px;
+        }
+
+        .resend-btn:disabled {
+            color: #94A3B8;
+            cursor: not-allowed;
+        }
+
+        /* Device Config */
+        .config-card {
+            background: white;
+            border-radius: 18px;
+            padding: 24px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .config-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #003876;
+            margin-bottom: 20px;
+        }
+
+        .language-slider {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .language-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #F8FAFC;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #E2E8F0;
+        }
+
+        .language-option:hover {
+            background: #E8F0FE;
+            border-color: #003876;
+        }
+
+        .language-option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #003876;
+        }
+
+        .radio-label {
+            font-size: 16px;
+            color: #1E293B;
+            font-weight: 500;
+        }
+
+        .selected-language {
+            padding: 16px;
+            background: linear-gradient(135deg, #E8F0FE 0%, #D4E4F7 100%);
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #003876;
+        }
+
+        /* Test Transaction */
+        .test-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            border: 1px solid #E2E8F0;
+        }
+
+        .test-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #E8F0FE 0%, #D4E4F7 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: #003876;
+        }
+
+        .test-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #003876;
+            margin-bottom: 12px;
+        }
+
+        .test-card p {
+            color: #64748B;
+            margin-bottom: 32px;
+        }
+
+        .test-status {
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .test-status.success {
+            background: #D1FAE5;
+            color: #00875A;
+            border-left: 4px solid #00875A;
+        }
+
+        .test-status.pending {
+            background: #FEF3C7;
+            color: #D97706;
+            border-left: 4px solid #D97706;
+        }
+
+        /* Upload Section */
+        .upload-area {
+            background: #F8FAFC;
+            border: 2px dashed #CBD5E1;
+            border-radius: 16px;
+            padding: 40px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            border-color: #003876;
+            background: #E8F0FE;
+        }
+
+        .upload-area.uploaded {
+            border-color: #00875A;
+            background: #D1FAE5;
+        }
+
+        .upload-icon {
+            color: #64748B;
+            margin-bottom: 16px;
+        }
+
+        .upload-area p {
+            color: #64748B;
+            font-size: 14px;
+        }
+
+        /* Post Binding */
+        .success-banner {
+            background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+            border-radius: 18px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-left: 4px solid #00875A;
+        }
+
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: #00875A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            color: white;
+        }
+
+        .success-banner h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #00875A;
+            margin-bottom: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .action-btn {
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #F8FAFC;
+            border-color: #003876;
+        }
+
+        .action-btn .icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #E8F0FE 0%, #D4E4F7 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #003876;
+        }
+
+        .action-btn .content {
+            flex: 1;
+            text-align: left;
+        }
+
+        .action-btn .content h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E293B;
+            margin-bottom: 4px;
+        }
+
+        .action-btn .content p {
+            font-size: 12px;
+            color: #64748B;
+        }
+
+        /* Toggle Buttons */
+        .toggle-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            background: white;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: #003876;
+            border-color: #003876;
+            color: white;
+        }
+
+        .image-upload-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .image-upload-box {
+            aspect-ratio: 1;
+            background: #F8FAFC;
+            border: 2px dashed #CBD5E1;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .image-upload-box:hover {
+            border-color: #003876;
+        }
+
+        .image-upload-box.filled {
+            border-style: solid;
+            border-color: #00875A;
+            background: #D1FAE5;
+        }
+
+        /* Success Screen */
+        .success-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-screen .success-icon {
+            margin: 0 auto 24px;
+        }
+
+        .success-screen h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #003876;
+            margin-bottom: 12px;
+        }
+
+        .success-details {
+            background: white;
+            border-radius: 18px;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: left;
+            border: 1px solid #E2E8F0;
+        }
+
+        .success-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .success-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .success-detail-row .label {
+            color: #64748B;
+            font-size: 14px;
+        }
+
+        .success-detail-row .value {
+            font-weight: 600;
+            color: #1E293B;
+            font-size: 14px;
+        }
+
+        .qr-status {
+            color: #00875A;
+            font-weight: 600;
+        }
+
+        .sbi-footer {
+            margin-top: 20px;
+            color: #64748B;
+            font-size: 11px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Login Screen -->
+        <div id="login-screen" class="screen">
+            <div class="login-screen">
+                <div class="login-content">
+                    <div class="logo-section">
+                        <div class="sbi-main-logo">
+                            <div class="sbi-circle">
+                                <svg width="50" height="50" viewBox="0 0 100 100" fill="none">
+                                    <circle cx="50" cy="50" r="45" fill="#003876"/>
+                                    <path d="M30 70V30L50 50L70 30V70" stroke="white" stroke-width="4" fill="none"/>
+                                    <circle cx="50" cy="50" r="12" fill="white"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div style="color: white; font-size: 20px; font-weight: 700; letter-spacing: 4px;">SBI</div>
+                                <div style="color: #00A3E0; font-size: 12px; font-weight: 500;">STATE BANK OF INDIA</div>
+                            </div>
+                        </div>
+                        <h1>Instant Activation</h1>
+                        <p>Field Operations System</p>
+                        <div class="sbi-tagline">PURE BANKING, NOTHING ELSE</div>
+                    </div>
+                    
+                    <div class="login-card">
+                        <h2>Welcome</h2>
+                        <p class="login-subtitle">Sign in to your FOS account</p>
+                        
+                        <div id="login-error" class="error-message hidden"></div>
+                        
+                        <form id="login-form">
+                            <div class="input-group">
+                                <label>Username</label>
+                                <input type="text" id="username" placeholder="Enter username" value="fos1" required>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label>Password</label>
+                                <div class="password-input">
+                                    <input type="password" id="password" placeholder="Enter password" value="fos123" required>
+                                    <button type="button" class="toggle-password" onclick="togglePassword()">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn-primary">Sign In</button>
+                        </form>
+                        
+                        <div class="demo-hint">
+                            <p>🔐 Demo: fos1 / fos123</p>
+                        </div>
+                    </div>
+                    
+                    <div class="sbi-footer">© 2026 State Bank of India | All Rights Reserved</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Screen - OPEN TICKETS CARD REMOVED -->
+        <div id="dashboard-screen" class="screen hidden">
+            <div class="header">
+                <div class="header-left">
+                    <div class="sbi-logo">
+                        <div class="sbi-logo-icon">
+                            <svg width="24" height="24" viewBox="0 0 50 50" fill="none">
+                                <circle cx="25" cy="25" r="20" fill="#003876"/>
+                                <path d="M15 35V15L25 25L35 15V35" stroke="white" stroke-width="2" fill="none"/>
+                                <circle cx="25" cy="25" r="6" fill="white"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="header-title">Dashboard</h1>
+                <div class="header-right">
+                    <button class="logout-btn" onclick="logout()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="screen-content">
+                <div class="welcome-section">
+                    <h2>Hello, FOS Officer <span class="sbi-badge">SBI</span></h2>
+                    <p>Field Sales Officer • Mumbai Zone</p>
+                </div>
+                
+                <div class="prompt-banner">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p>Select operation: Static QR Activation for new SBI Soundbox setup or Device Unbinding for removal.</p>
+                </div>
+                
+                <div class="action-grid">
+                    <button class="action-card" onclick="navigateTo('tickets')">
+                        <div class="action-icon blue">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3>Static QR Activation</h3>
+                            <p>New SBI Soundbox setup</p>
+                        </div>
+                    </button>
+                    
+                    <button class="action-card" onclick="navigateTo('unbinding-imei')">
+                        <div class="action-icon orange">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3>Device Unbinding</h3>
+                            <p>Soundbox removal/replacement</p>
+                        </div>
+                    </button>
+                </div>
+                
+                <!-- Open Tickets Card REMOVED from here -->
+                
+                <div style="margin-top: 40px; text-align: center;">
+                    <div style="color: #003876; font-size: 12px; font-weight: 600;">SBI SOUNDBOX ACTIVATION</div>
+                    <div style="color: #64748B; font-size: 11px; margin-top: 4px;">Secured by State Bank of India</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ticket List Screen -->
+        <div id="tickets-screen" class="screen hidden">
+            <div class="header">
+                <div class="header-left">
+                    <button class="back-btn" onclick="navigateTo('dashboard')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                </div>
+                <h1 class="header-title">My Tickets</h1>
+                <div class="header-right"></div>
+            </div>
+            
+            <div class="screen-content">
+                <div class="prompt-banner">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p>Search using Ticket ID and select the relevant ticket to proceed with SBI Soundbox activation.</p>
+                </div>
+                
+                <div class="search-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" id="ticket-search" placeholder="Search by Ticket ID" onkeyup="filterTickets()">
+                </div>
+                
+                <div class="ticket-list" id="ticket-list-container"></div>
+            </div>
+        </div>
+
+        <!-- Ticket Details Screen -->
+        <div id="ticket-details-screen" class="screen hidden">
+            <div class="header">
+                <div class="header-left">
+                    <button class="back-btn" onclick="navigateTo('tickets')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                </div>
+                <h1 class="header-title">Ticket Details</h1>
+                <div class="header-right"></div>
+            </div>
+            
+            <div class="screen-content">
+                <div class="prompt-banner">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p>Verify merchant details carefully before proceeding with SBI Soundbox activation.</p>
+                </div>
+                
+                <div class="detail-card" id="ticket-detail-content"></div>
+                
+                <button class="btn-primary" onclick="startActivation()">Start Activation</button>
+            </div>
+        </div>
+
+        <!-- Binding Scan Screen -->
+        <div id="binding-scan-screen" class="screen hidden">
+            <div class="header">
+                <div class="header-left">
+                    <button class="back-btn" onclick="navigateTo('ticket-details')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                </div>
+                <h1 class="header-title">Binding Scan</h1>
+                <div class="header-right"></div>
+            </div>
+            
+            <div class="screen-content">
+                <div class="prompt-banner">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p>Scan or enter SBI Merchant QR Code and Device IMEI number. Both fields are mandatory.</p>
+                </div>
+                
+                <div class="scan-section">
+                    <label>SBI Merchant QR Code</label>
+                    <div class="scan-input-group">
+                        <input type="text" id="qr-input" placeholder="Enter or scan QR code">
+                        <button class="scan-btn" onclick="scanQR()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9V5a2 2 0 012-2h4m6 0h4a2 2 0 012 2v4m0 6v4a2 2 0 01-2 2h-4m-6 0H5a2 2 0 01-2-2v-4" />
+                            </svg>
+                            Scan
+                        </button>
+                    </div>
+                    <span class="scanned-badge" id="qr-badge" style="display: none;">✓ Scanned</span>
+                </div>
+                
+                <div class="scan-section">
+                    <label>Soundbox IMEI</label>
+                    <div class="scan-input-group">
+                        <input type="text" id="imei-input" placeholder="Enter 15-digit IMEI" maxlength="15" oninput="validateIMEI()">
+                        <button class="scan-btn" onclick="scanIMEI()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9V5a2 2 0 012-2h4m6 0h4a2 2 0 012 2v4m0 6v4a2 2 0 01-2 2h-4m-6 0H5a2 2 0 01-2-2v-4" />
+                            </svg>
+                            Scan
+                        </button>
+                    </div>
+                    <span class="scanned-badge" id="imei-badge" style="display: none;">✓ Valid IMEI</span>
+                </div>
+                
+                <button class="btn-primary" id="proceed-scan-btn" onclick="navigateTo('activation-otp')" disabled>Proceed to Verify</button>
+            </div>
+        </div>
+
+        <!-- OTP Verification Screen -->
+        <div id="activation-otp-screen" class="screen hidden">
+            <div class="header">
+                <div class="header-left">
+                    <button class="back-btn" onclick="navigateTo('binding-scan')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                </div>
+                <h1 class="header-title">SBI OTP Verification</h1>
+                <div class="header-right"></div>
+            </div>
+            
+            <div class="screen-content">
+                <div class="prompt-banner">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p>Enter 6-digit OTP sent to registered mobile. Max 5 attempts within 24 hours.</p>
+                </div>
+                
+                <div class="otp-card">
+                    <div class="otp-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="1.5">
+                            <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    
+                    <p class="otp-sent-to">OTP sent to ******3210</p>
+                    
+                    <div class="otp-container" id="otp-inputs">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 0)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 1)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 2)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 3)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 4)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 5)">
+                    </div>
+                    
+                    <div id="otp-error" class="error-text hidden"></div>
+                    
+                    <div class="attempts-info">
+                        <span id="attempts-count">Attempts: 0/5</span>
+                        <span class="hint">Max 5 attempts allowed</span>
+                    </div>
+                    
+                    <button class="btn-primary" onclick="verifyOTP()">Verify OTP</button>
+                    
+                    <button class="resend-btn" id="resend-btn" onclick="resendOTP()">Resend OTP</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Device Configuration Screen -->
+        <div id="device-config-screen" class="screen hidden">
+            <div class="header">
+                <div class="header-left">
+                    <button class="back-btn" onclick="navigateTo('activation-otp')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                </div>
+                <h1 class="header-title">Language Selection</h1>
+                <div class="header-right"></div>
+            </div>
+            
+            <div class="screen-content">
+                <div class="prompt-banner">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p>Select preferred language for SBI Soundbox as per merchant requirement.</p>
+                </div>
+                
+                <div class="config-card">
+                    <h3>Select Language</h3>
+                    
+                    <div class="language-slider">
+                        <label class="language-option">
+                            <input type="radio" name="language" value="English" checked onchange="updateSelectedLanguage()">
+                            <span class="radio-label">English</span>
+                        </label>
+                        <label class="language-option">
+                            <input type="radio" name="language" value="Hindi" onchange="updateSelectedLanguage()">
+                            <span class="radio-label">हिन्दी (Hindi)</span>
+                        </label>
+                        <label class="language-option">
+                            <input type="radio" name="language" value="Marathi" onchange="updateSelectedLanguage()">
+                            <span class="radio-label">मराठी (Marathi)</span>
+                        </label>
+                        <label class="language-option">
+                            <input type="radio" name="language" value="Gujarati" onchange="updateSelectedLanguage()">
+                            <span class="radio-label">ગુજરાતી (Gujarati)</span>
+                        </label>
+                        <label class="language-option">
+                            <input type="radio" name="language" value="Tamil" onchange="updateSelectedLanguage()">
+                            <span class="radio-label">தமிழ் (Tamil)</span>
+                        </label>
+                        <label class="language-option">
+                            <input type="radio" name="language" value="Telugu" onchange="updateSelectedLanguage()">
+                            <span class="radio-label">తెలుగు (Telugu)</span>
+                        </label>
+                        <label class="language-option">
+                            <input type="radio" name="language" value="Bengali" onchange="updateSelectedLanguage()">
+                            <span class="radio-label">বাংলা (Bengali)</span>
+                        </label>
+                    </div>
+                    
+                    <div class="selected-language">
+                        <span>Selected:</span>
+                        <strong id="selected-language-display">English</strong>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" onclick="navigateTo('test-transaction')">Submit & Continue</button>
+            </div>
+        </div>
+
+        <!-- Test Transaction Screen -->
+        <div id="test-transaction-screen" class="screen hidden">
+            <div class="header">
+                <div class="header-left">
+                    <button class="back-btn" onclick="navigateTo('device-config')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                </div>
+                <h1 class="header-title">Test Transaction</h1>
+                <div class="header-right"></div>
+            </div>
+            
+            <div class="screen-content">
+                <div class="test-card">
+                    <div class="test-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="2">
+                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                        </svg>
+                    </div>
+                    <h3>Perform Test Transaction</h3>
+                    <p>Verify SBI Soundbox is functioning correctly</p>
+                    
+                    <div class="test-status pending" id="test-status">
+                        <span id="test-status-text">Pending</span>
+                    </div>
+                    
+                    <button class="btn-primary" onclick="performTestTransaction()">Perform Test Transaction</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload ICF Screen -->
+        <div id="upload-icf-screen" class="screen hidden">
+            <div class="header">
+                <div class="header-left">
+                    <button class="back-btn" onclick="navigateTo('test-transaction')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                </div>
+                <h1 class="header-title">Upload ICF Form</h1>
+                <div class="header-right"></div>
+            </div>
+            
+            <div class="screen-content">
+                <div class="prompt-banner">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p>Upload ICF form as required. This step is mandatory to complete SBI activation.</p>
+                </div>
+                
+                <div class="upload-area" id="icf-upload-area" onclick="uploadICF()">
+                    <div class="upload-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.5">
+                            <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <p>Click to upload ICF Form</p>
+                    <p style="font-size: 12px; margin-top: 8px;">PDF, JPG, PNG (Max 5MB)</p>
+                </div>
+                
+                <div id="icf-uploaded-file" class="hidden"></div>
+                
+                <button class="btn-primary" id="complete-activation-btn" onclick="navigateTo('post-binding')" disabled>Continue to Completion</button>
+            </div>
+        </div>
+
+        <!-- Post Binding Screen -->
+        <div id="post-binding-screen" class="screen hidden">
+            <div class="header">
+                <div class="header-left">
+                    <button class="back-btn" onclick="navigateTo('upload-icf')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                </div>
+                <h1 class="header-title">Complete Activation</h1>
+                <div class="header-right"></div>
+            </div>
+            
+            <div class="screen-content">
+                <div class="success-banner">
+                    <div class="success-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h3>SBI Soundbox Ready</h3>
+                    <p style="color: #64748B; font-size: 14px;">All steps completed. Ready to close ticket.</p>
+                </div>
+                
+                <div class="action-buttons">
+                    <div class="action-btn" onclick="navigateTo('device-config')">
+                        <div class="icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="2">
+                                <path d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                            </svg>
+                        </div>
+                        <div class="content">
+                            <h4>Language: <span id="final-language">English</span></h4>
+                            <p>Selected language</p>
+                        </div>
+                    </div>
+                    
+                    <div class="action-btn" id="final-test-status">
+                        <div class="icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="2">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="content">
+                            <h4>Test Transaction</h4>
+                            <p>Not completed</p>
+                        </div>
+                    </div>
+                    
+                    <div class="action-btn" id="final-icf-status">
+                        <div class="icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="2">
+                                <path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div class="content">
+                            <h4>ICF Form</h4>
+                            <p>Not uploaded</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" onclick="completeAndCloseTicket()">Complete & Close Ticket</button>
+                <button class="btn-secondary" onclick="navigateTo('tickets')">Save & Close Later</button>
+            </div>
+        </div>
+
+        <!-- Unbinding IMEI Screen -->
+        <div id="unbinding-imei-screen" class="screen hidden">
+            <div class="header">
+                <div class="header-left">
+                    <button class="back-btn" onclick="navigateTo('dashboard')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                </div>
+                <h1 class="header-title">Device Unbinding</h1>
+                <div class="header-right"></div>
+            </div>
+            
+            <div class="screen-content">
+                <div class="prompt-banner">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p>Scan or manually enter SBI Soundbox IMEI number to proceed with unbinding.</p>
+                </div>
+                
+                <div class="scan-section">
+                    <label>Soundbox IMEI</label>
+                    <div class="scan-input-group">
+                        <input type="text" id="unbind-imei-input" placeholder="Enter 15-digit IMEI" maxlength="15" oninput="validateUnbindIMEI()">
+                        <button class="scan-btn" onclick="scanUnbindIMEI()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9V5a2 2 0 012-2h4m6 0h4a2 2 0 012 2v4m0 6v4a2 2 0 01-2 2h-4m-6 0H5a2 2 0 01-2-2v-4" />
+                            </svg>
+                            Scan
+                        </button>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" id="unbind-imei-proceed" onclick="navigateTo('unbinding-collection')" disabled>Continue</button>
+            </div>
+        </div>
+
+        <!-- Unbinding Collection Screen -->
+        <div id="unbinding-collection-screen" class="screen hidden">
+            <div class="header">
+                <div class="header-left">
+                    <button class="back-btn" onclick="navigateTo('unbinding-imei')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                </div>
+                <h1 class="header-title">Collection Details</h1>
+                <div class="header-right"></div>
+            </div>
+            
+            <div class="screen-content">
+                <div class="prompt-banner">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p>Confirm whether SIM and USB have been collected from the merchant.</p>
+                </div>
+                
+                <div class="config-card">
+                    <h3>SIM Collected</h3>
+                    <div class="toggle-group">
+                        <button class="toggle-btn" id="sim-yes" onclick="setSIM(true)">Yes</button>
+                        <button class="toggle-btn" id="sim-no" onclick="setSIM(false)">No</button>
+                    </div>
+                    
+                    <h3 style="margin-top: 24px;">USB Collected</h3>
+                    <div class="toggle-group">
+                        <button class="toggle-btn" id="usb-yes" onclick="setUSB(true)">Yes</button>
+                        <button class="toggle-btn" id="usb-no" onclick="setUSB(false)">No</button>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" id="collection-proceed" onclick="navigateTo('unbinding-upload')" disabled>Continue to Upload</button>
+            </div>
+        </div>
+
+        <!-- Unbinding Upload Screen -->
+        <div id="unbinding-upload-screen" class="screen hidden">
+            <div class="header">
+                <div class="header-left">
+                    <button class="back-btn" onclick="navigateTo('unbinding-collection')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                </div>
+                <h1 class="header-title">Upload Documents</h1>
+                <div class="header-right"></div>
+            </div>
+            
+            <div class="screen-content">
+                <div class="prompt-banner">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p>Upload device images (min 1, max 3) along with ICF form. All documents required.</p>
+                </div>
+                
+                <label style="font-weight: 500; margin-bottom: 12px; display: block;">Device Images (1-3)</label>
+                <div class="image-upload-grid" id="device-images-grid">
+                    <div class="image-upload-box" onclick="uploadDeviceImage(0)">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2">
+                            <path d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span style="font-size: 11px; margin-top: 4px;">Add</span>
+                    </div>
+                    <div class="image-upload-box" onclick="uploadDeviceImage(1)">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2">
+                            <path d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span style="font-size: 11px; margin-top: 4px;">Add</span>
+                    </div>
+                    <div class="image-upload-box" onclick="uploadDeviceImage(2)">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2">
+                            <path d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span style="font-size: 11px; margin-top: 4px;">Add</span>
+                    </div>
+                </div>
+                
+                <label style="font-weight: 500; margin: 20px 0 12px; display: block;">ICF Form</label>
+                <div class="upload-area" onclick="uploadUnbindICF()" id="unbind-icf-area">
+                    <div class="upload-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.5">
+                            <path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <p>Click to upload ICF Form</p>
+                </div>
+                
+                <button class="btn-primary" id="unbind-upload-proceed" onclick="navigateTo('unbinding-otp')" disabled>Proceed to Verification</button>
+            </div>
+        </div>
+
+        <!-- Unbinding OTP Screen -->
+        <div id="unbinding-otp-screen" class="screen hidden">
+            <div class="header">
+                <div class="header-left">
+                    <button class="back-btn" onclick="navigateTo('unbinding-upload')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                </div>
+                <h1 class="header-title">SBI OTP Verification</h1>
+                <div class="header-right"></div>
+            </div>
+            
+            <div class="screen-content">
+                <div class="prompt-banner">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p>Enter OTP sent to registered mobile. Max 5 attempts within 24 hours.</p>
+                </div>
+                
+                <div class="otp-card">
+                    <div class="otp-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#003876" stroke-width="1.5">
+                            <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    
+                    <p class="otp-sent-to">OTP sent to ******3210</p>
+                    
+                    <div class="otp-container" id="unbind-otp-inputs">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNextUnbind(this, 0)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNextUnbind(this, 1)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNextUnbind(this, 2)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNextUnbind(this, 3)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNextUnbind(this, 4)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNextUnbind(this, 5)">
+                    </div>
+                    
+                    <div class="attempts-info">
+                        <span id="unbind-attempts-count">Attempts: 0/5</span>
+                        <span class="hint">Max 5 attempts allowed</span>
+                    </div>
+                    
+                    <button class="btn-primary" onclick="showUnbindConfirmation()">Verify OTP</button>
+                    
+                    <button class="resend-btn" onclick="resendUnbindOTP()">Resend OTP</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Unbinding Success Screen -->
+        <div id="unbinding-success-screen" class="screen hidden">
+            <div class="header">
+                <div class="header-left"></div>
+                <h1 class="header-title">Unbinding Complete</h1>
+                <div class="header-right"></div>
+            </div>
+            
+            <div class="screen-content">
+                <div class="success-screen">
+                    <div class="success-icon" style="background: #00875A;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h2>SBI Soundbox Unbound</h2>
+                    <p style="color: #64748B;">The device has been successfully deactivated</p>
+                    
+                    <div class="success-details">
+                        <div class="success-detail-row">
+                            <span class="label">MID</span>
+                            <span class="value">SBIMID123456</span>
+                        </div>
+                        <div class="success-detail-row">
+                            <span class="label">TID</span>
+                            <span class="value">SBITID789012</span>
+                        </div>
+                        <div class="success-detail-row">
+                            <span class="label">Device Serial Number</span>
+                            <span class="value">SBISN123456789</span>
+                        </div>
+                        <div class="success-detail-row">
+                            <span class="label">QR Status</span>
+                            <span class="value qr-status">Deactivated</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-primary" onclick="navigateTo('dashboard')">Return to Dashboard</button>
+                    
+                    <div class="sbi-footer" style="margin-top: 24px;">SBI Soundbox Deactivation Complete</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirmation Modal -->
+        <div id="confirmation-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+            <div style="width: 340px; background: white; border-radius: 24px; padding: 28px 24px; text-align: center; border-top: 4px solid #DC2626;">
+                <div class="warning-icon" style="width: 64px; height: 64px; background: #FEF2F2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #DC2626;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 12px; color: #003876;">Confirm Unbinding</h3>
+                <p style="color: #64748B; margin-bottom: 28px;">Are you sure you want to unbind this SBI Soundbox? This action cannot be undone.</p>
+                <div style="display: flex; gap: 12px;">
+                    <button onclick="confirmUnbind()" style="flex: 1; background: #DC2626; color: white; border: none; padding: 16px; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer;">Yes, Unbind</button>
+                    <button onclick="hideModal()" style="flex: 1; background: #F1F5F9; color: #003876; border: none; padding: 16px; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer;">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let currentTicket = null;
+        let tickets = [
+            { id: 'SBITKT001', merchantName: 'Sharma General Store', mobileNumber: '9876543210', location: 'Andheri East, Mumbai', status: 'open', createdAt: new Date().toISOString(), mid: 'SBIMID123456', tid: 'SBITID789012', deviceSerialNumber: 'SBISN123456789' },
+            { id: 'SBITKT002', merchantName: 'Patel Electronics', mobileNumber: '8765432109', location: 'Borivali West, Mumbai', status: 'in-progress', createdAt: new Date(Date.now() - 86400000).toISOString(), qrCode: 'SBIQR123456', imei: '123456789012345', mid: 'SBIMID234567', tid: 'SBITID890123', deviceSerialNumber: 'SBISN987654321' },
+            { id: 'SBITKT003', merchantName: 'Gupta Medical', mobileNumber: '7654321098', location: 'Dadar, Mumbai', status: 'open', createdAt: new Date(Date.now() - 172800000).toISOString(), mid: 'SBIMID345678', tid: 'SBITID901234', deviceSerialNumber: 'SBISN456789123' }
+        ];
+        
+        let otpAttempts = 0;
+        let unbindOtpAttempts = 0;
+        let cooldownTimer = null;
+        let testCompleted = false;
+        let icfUploaded = false;
+        let deviceImagesCount = 0;
+        let unbindIcfUploaded = false;
+        let simCollected = null;
+        let usbCollected = null;
+
+        function navigateTo(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+            document.getElementById(screenId + '-screen').classList.remove('hidden');
+            
+            if (screenId === 'tickets') renderTickets();
+            if (screenId === 'ticket-details' && currentTicket) renderTicketDetails();
+            if (screenId === 'post-binding') updatePostBindingStatus();
+        }
+
+        function logout() {
+            currentTicket = null;
+            navigateTo('login');
+        }
+
+        function togglePassword() {
+            const pwd = document.getElementById('password');
+            pwd.type = pwd.type === 'password' ? 'text' : 'password';
+        }
+
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === 'fos1' && password === 'fos123') {
+                navigateTo('dashboard');
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+                document.getElementById('login-error').textContent = 'Invalid username or password';
+            }
+        });
+
+        function renderTickets() {
+            const searchTerm = document.getElementById('ticket-search')?.value.toLowerCase() || '';
+            const filtered = tickets.filter(t => 
+                t.status !== 'completed' && 
+                t.id.toLowerCase().includes(searchTerm)
+            );
+            
+            const container = document.getElementById('ticket-list-container');
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg><p>No tickets found</p></div>';
+                return;
+            }
+            
+            container.innerHTML = filtered.map(t => `
+                <div class="ticket-item" onclick="selectTicket('${t.id}')">
+                    <div class="ticket-header">
+                        <span class="ticket-id">${t.id}</span>
+                        <span class="ticket-status ${t.status === 'open' ? 'status-open' : 'status-progress'}">${t.status === 'open' ? 'Open' : 'In Progress'}</span>
+                    </div>
+                    <h4>${t.merchantName}</h4>
+                    <p class="ticket-mobile">📱 ${t.mobileNumber}</p>
+                    <p class="ticket-location">📍 ${t.location}</p>
+                    ${t.status === 'in-progress' ? '<div class="resume-hint"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span>Tap to resume activation</span></div>' : ''}
+                </div>
+            `).join('');
+        }
+
+        function filterTickets() { renderTickets(); }
+
+        function selectTicket(ticketId) {
+            currentTicket = tickets.find(t => t.id === ticketId);
+            if (currentTicket.status === 'in-progress') {
+                if (currentTicket.icfUploaded) navigateTo('post-binding');
+                else if (currentTicket.testTransactionDone) navigateTo('upload-icf');
+                else if (currentTicket.language) navigateTo('test-transaction');
+                else if (currentTicket.imei) navigateTo('device-config');
+                else navigateTo('ticket-details');
+            } else {
+                navigateTo('ticket-details');
+            }
+        }
+
+        function renderTicketDetails() {
+            if (!currentTicket) return;
+            document.getElementById('ticket-detail-content').innerHTML = `
+                <div class="detail-header">
+                    <span class="ticket-id">${currentTicket.id}</span>
+                    <span class="status-open">Open</span>
+                </div>
+                <div class="detail-row"><span class="label">Merchant Name</span><span class="value">${currentTicket.merchantName}</span></div>
+                <div class="detail-row"><span class="label">Mobile Number</span><span class="value">${currentTicket.mobileNumber}</span></div>
+                <div class="detail-row"><span class="label">Location</span><span class="value">${currentTicket.location}</span></div>
+                <div class="detail-row"><span class="label">Created Date</span><span class="value">${new Date(currentTicket.createdAt).toLocaleDateString()}</span></div>
+                <div class="detail-row"><span class="label">MID</span><span class="value">${currentTicket.mid}</span></div>
+                <div class="detail-row"><span class="label">TID</span><span class="value">${currentTicket.tid}</span></div>
+            `;
+        }
+
+        function startActivation() {
+            if (currentTicket) {
+                currentTicket.status = 'in-progress';
+                navigateTo('binding-scan');
+            }
+        }
+
+        function scanQR() {
+            const qrInput = document.getElementById('qr-input');
+            qrInput.value = 'SBIQR' + Math.random().toString(36).substring(2, 10).toUpperCase();
+            document.getElementById('qr-badge').style.display = 'inline-block';
+            checkScanProceed();
+        }
+
+        function scanIMEI() {
+            const imeiInput = document.getElementById('imei-input');
+            imeiInput.value = Math.floor(Math.random() * 1000000000000000).toString().padStart(15, '0');
+            document.getElementById('imei-badge').style.display = 'inline-block';
+            checkScanProceed();
+        }
+
+        function validateIMEI() {
+            const imeiInput = document.getElementById('imei-input');
+            imeiInput.value = imeiInput.value.replace(/\D/g, '').slice(0, 15);
+            const isValid = imeiInput.value.length === 15;
+            document.getElementById('imei-badge').style.display = isValid ? 'inline-block' : 'none';
+            checkScanProceed();
+        }
+
+        function checkScanProceed() {
+            const qrValue = document.getElementById('qr-input').value;
+            const imeiValue = document.getElementById('imei-input').value;
+            document.getElementById('proceed-scan-btn').disabled = !(qrValue && imeiValue.length === 15);
+        }
+
+        function moveToNext(input, index) {
+            input.value = input.value.replace(/\D/g, '');
+            if (input.value && index < 5) {
+                document.getElementById('otp-inputs').children[index + 1].focus();
+            }
+        }
+
+        function verifyOTP() {
+            const inputs = document.querySelectorAll('#otp-inputs .otp-input');
+            const otp = Array.from(inputs).map(i => i.value).join('');
+            
+            if (otp.length === 6) {
+                if (otp === '123456') {
+                    navigateTo('device-config');
+                } else {
+                    otpAttempts++;
+                    document.getElementById('attempts-count').textContent = `Attempts: ${otpAttempts}/5`;
+                    document.getElementById('otp-error').classList.remove('hidden');
+                    document.getElementById('otp-error').textContent = 'Invalid OTP. Please try again.';
+                    
+                    if (otpAttempts >= 5) {
+                        document.getElementById('otp-error').textContent = 'Maximum OTP attempts reached. Try again after 24 hours.';
+                        document.querySelector('#activation-otp-screen .btn-primary').disabled = true;
+                    }
+                }
+            }
+        }
+
+        function resendOTP() {
+            if (otpAttempts >= 5) return;
+            otpAttempts++;
+            document.getElementById('attempts-count').textContent = `Attempts: ${otpAttempts}/5`;
+            
+            const btn = document.getElementById('resend-btn');
+            let seconds = 30;
+            btn.disabled = true;
+            
+            cooldownTimer = setInterval(() => {
+                seconds--;
+                btn.textContent = `Resend OTP in ${seconds}s`;
+                if (seconds <= 0) {
+                    clearInterval(cooldownTimer);
+                    btn.textContent = 'Resend OTP';
+                    btn.disabled = false;
+                }
+            }, 1000);
+        }
+
+        function updateSelectedLanguage() {
+            const selected = document.querySelector('input[name="language"]:checked').value;
+            document.getElementById('selected-language-display').textContent = selected;
+            if (currentTicket) currentTicket.language = selected;
+        }
+
+        function performTestTransaction() {
+            testCompleted = true;
+            document.getElementById('test-status').className = 'test-status success';
+            document.getElementById('test-status-text').textContent = 'Test transaction completed successfully';
+            if (currentTicket) currentTicket.testTransactionDone = true;
+            
+            setTimeout(() => navigateTo('upload-icf'), 1000);
+        }
+
+        function uploadICF() {
+            icfUploaded = true;
+            const area = document.getElementById('icf-upload-area');
+            area.classList.add('uploaded');
+            area.innerHTML = `
+                <div class="upload-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#00875A" stroke-width="1.5">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <p style="color: #00875A;">ICF_Form_${currentTicket?.id || 'SBI'}.pdf uploaded</p>
+            `;
+            document.getElementById('complete-activation-btn').disabled = false;
+            if (currentTicket) currentTicket.icfUploaded = true;
+        }
+
+        function updatePostBindingStatus() {
+            document.getElementById('final-language').textContent = currentTicket?.language || 'English';
+            
+            const testStatus = document.getElementById('final-test-status').querySelector('.content p');
+            if (testCompleted || currentTicket?.testTransactionDone) {
+                testStatus.textContent = 'Completed';
+                testStatus.style.color = '#00875A';
+            }
+            
+            const icfStatus = document.getElementById('final-icf-status').querySelector('.content p');
+            if (icfUploaded || currentTicket?.icfUploaded) {
+                icfStatus.textContent = 'Uploaded';
+                icfStatus.style.color = '#00875A';
+            }
+        }
+
+        function completeAndCloseTicket() {
+            if (currentTicket) {
+                currentTicket.status = 'completed';
+            }
+            alert('SBI Soundbox ticket completed successfully!');
+            navigateTo('tickets');
+        }
+
+        function validateUnbindIMEI() {
+            const input = document.getElementById('unbind-imei-input');
+            input.value = input.value.replace(/\D/g, '').slice(0, 15);
+            document.getElementById('unbind-imei-proceed').disabled = input.value.length !== 15;
+        }
+
+        function scanUnbindIMEI() {
+            const input = document.getElementById('unbind-imei-input');
+            input.value = Math.floor(Math.random() * 1000000000000000).toString().padStart(15, '0');
+            document.getElementById('unbind-imei-proceed').disabled = false;
+        }
+
+        function setSIM(value) {
+            simCollected = value;
+            document.getElementById('sim-yes').className = value ? 'toggle-btn active' : 'toggle-btn';
+            document.getElementById('sim-no').className = !value ? 'toggle-btn active' : 'toggle-btn';
+            checkCollectionProceed();
+        }
+
+        function setUSB(value) {
+            usbCollected = value;
+            document.getElementById('usb-yes').className = value ? 'toggle-btn active' : 'toggle-btn';
+            document.getElementById('usb-no').className = !value ? 'toggle-btn active' : 'toggle-btn';
+            checkCollectionProceed();
+        }
+
+        function checkCollectionProceed() {
+            document.getElementById('collection-proceed').disabled = simCollected === null || usbCollected === null;
+        }
+
+        function uploadDeviceImage(index) {
+            deviceImagesCount++;
+            const boxes = document.querySelectorAll('.image-upload-box');
+            boxes[index].classList.add('filled');
+            boxes[index].innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00875A" stroke-width="2">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span style="font-size: 11px; margin-top: 4px; color: #00875A;">Uploaded</span>
+            `;
+            checkUnbindUploadProceed();
+        }
+
+        function uploadUnbindICF() {
+            unbindIcfUploaded = true;
+            const area = document.getElementById('unbind-icf-area');
+            area.classList.add('uploaded');
+            area.innerHTML = `
+                <div class="upload-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00875A" stroke-width="1.5">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <p style="color: #00875A;">ICF Form uploaded</p>
+            `;
+            checkUnbindUploadProceed();
+        }
+
+        function checkUnbindUploadProceed() {
+            document.getElementById('unbind-upload-proceed').disabled = deviceImagesCount < 1 || !unbindIcfUploaded;
+        }
+
+        function moveToNextUnbind(input, index) {
+            input.value = input.value.replace(/\D/g, '');
+            if (input.value && index < 5) {
+                document.getElementById('unbind-otp-inputs').children[index + 1].focus();
+            }
+        }
+
+        function resendUnbindOTP() {
+            unbindOtpAttempts++;
+            document.getElementById('unbind-attempts-count').textContent = `Attempts: ${unbindOtpAttempts}/5`;
+        }
+
+        function showUnbindConfirmation() {
+            document.getElementById('confirmation-modal').style.display = 'flex';
+        }
+
+        function hideModal() {
+            document.getElementById('confirmation-modal').style.display = 'none';
+        }
+
+        function confirmUnbind() {
+            hideModal();
+            navigateTo('unbinding-success');
+        }
+    </script>
+</body>
+</html>
